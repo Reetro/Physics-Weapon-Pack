@@ -5,14 +5,11 @@
 #include "Super_Projectile.h"
 #include "Animation/AnimInstance.h"
 #include "Camera/CameraComponent.h"
+#include "Super_Gun.h"
 #include "Components/CapsuleComponent.h"
 #include "Components/InputComponent.h"
 #include "GameFramework/InputSettings.h"
-#include "HeadMountedDisplayFunctionLibrary.h"
 #include "Kismet/GameplayStatics.h"
-#include "MotionControllerComponent.h"
-#include "XRMotionControllerBase.h" // for FXRMotionControllerBase::RightHandSourceId
-
 
 // Sets default values
 APhysicsCharacter::APhysicsCharacter()
@@ -122,7 +119,10 @@ void APhysicsCharacter::LookUpAtRate(float Rate)
 
 void APhysicsCharacter::OnFire()
 {
-
+  if (CurrentGun)
+  {
+    CurrentGun->OnGunFire();
+  }
 }
 
 ASuper_Gun* APhysicsCharacter::GetCurrentGun()
@@ -138,7 +138,7 @@ void APhysicsCharacter::EquipGun(ASuper_Gun* GunToEquip)
 
     PlayerArms->SetHiddenInGame(false);
 
-    GunToEquip->AttachToComponent()
+    
   }
   else
   {

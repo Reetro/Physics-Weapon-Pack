@@ -38,8 +38,7 @@ public class PhysicsWeaponPack : ModuleRules
 				"Engine",
 				"Slate",
 				"SlateCore",
-        "InputCore",
-        "HeadMountedDisplay"
+        "InputCore"
 				// ... add private dependencies that you statically link with here ...	
 			}
 			);
