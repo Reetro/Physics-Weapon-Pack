@@ -194,6 +194,22 @@ void APhysicsCharacter::OnFire()
         // spawn the projectile at the muzzle
         World->SpawnActor<ASuper_Projectile>(ProjectileClass, SpawnLocation, SpawnRotation, ActorSpawnParams);
       }
+      // try and play the sound if specified
+      if (FireSound != NULL)
+      {
+        UGameplayStatics::PlaySoundAtLocation(this, FireSound, GetActorLocation());
+      }
+
+      // try and play a firing animation if specified
+      if (FireAnimation != NULL)
+      {
+        // Get the animation object for the arms mesh
+        UAnimInstance* AnimInstance = Mesh1P->GetAnimInstance();
+        if (AnimInstance != NULL)
+        {
+          AnimInstance->Montage_Play(FireAnimation, 1.f);
+        }
+      }
     }
   }
 }
