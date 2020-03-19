@@ -2,6 +2,7 @@
 
 
 #include "Super_WeaponPickup.h"
+#include "Super_Gun.h"
 #include "Components/SphereComponent.h"
 #include "Components/SceneComponent.h"
 #include "Components/StaticMeshComponent.h"

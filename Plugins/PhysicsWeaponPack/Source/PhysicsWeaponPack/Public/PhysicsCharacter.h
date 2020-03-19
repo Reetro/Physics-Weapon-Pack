@@ -6,6 +6,8 @@
 #include "GameFramework/Character.h"
 #include "PhysicsCharacter.generated.h"
 
+class ASuper_Gun;
+
 UCLASS()
 class PHYSICSWEAPONPACK_API APhysicsCharacter : public ACharacter
 {
@@ -13,23 +15,7 @@ class PHYSICSWEAPONPACK_API APhysicsCharacter : public ACharacter
 
   /** Pawn mesh: 1st person view (arms; seen only by self) */
   UPROPERTY(VisibleDefaultsOnly, Category = Mesh)
-  class USkeletalMeshComponent* Mesh1P;
-
-  /** Gun mesh: 1st person view (seen only by self) */
-  UPROPERTY(VisibleDefaultsOnly, Category = Mesh)
-  class USkeletalMeshComponent* FP_Gun;
-
-  /** Location on gun mesh where projectiles should spawn. */
-  UPROPERTY(VisibleDefaultsOnly, Category = Mesh)
-  class USceneComponent* FP_MuzzleLocation;
-
-  /** Gun mesh: VR view (attached to the VR controller directly, no arm, just the actual gun) */
-  UPROPERTY(VisibleDefaultsOnly, Category = Mesh)
-  class USkeletalMeshComponent* VR_Gun;
-
-  /** Location on VR gun mesh where projectiles should spawn. */
-  UPROPERTY(VisibleDefaultsOnly, Category = Mesh)
-  class USceneComponent* VR_MuzzleLocation;
+  class USkeletalMeshComponent* PlayerArms;
 
   /** First person camera */
   UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"))
@@ -43,9 +29,23 @@ class PHYSICSWEAPONPACK_API APhysicsCharacter : public ACharacter
   UPROPERTY(VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
   class UMotionControllerComponent* L_MotionController;
 
+  /* Returns the current gun the player has equipped */
+  UFUNCTION(BlueprintPure, Category = "Weapon Vars")
+  ASuper_Gun* GetCurrentGun();
+
+  UFUNCTION(BlueprintCallable, Category = "Weapon Functions")
+  void EquipGun(ASuper_Gun* GunToEquip);
+
+  UFUNCTION(BlueprintCallable, Category = "Weapon Functions")
+  void UnEquipGun();
+
 public:
 	// Sets default values for this character's properties
 	APhysicsCharacter();
+
+private:
+
+  ASuper_Gun* CurrentGun;
 
 public:
   /** Base turn rate, in deg/sec. Other scaling may affect final turn rate. */
@@ -63,6 +63,10 @@ public:
   /** Projectile class to spawn */
   UPROPERTY(EditDefaultsOnly, Category = "Projectile")
   TSubclassOf<class ASuper_Projectile> ProjectileClass;
+  
+  /* Gun player will start with */
+  UPROPERTY(EditDefaultsOnly, Category = "Projectile")
+  TSubclassOf<ASuper_Gun> StartingGun;
 
   /** Sound to play each time we fire */
   UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Gameplay)
@@ -80,9 +84,6 @@ protected:
 
   /** Fires a projectile. */
   void OnFire();
-
-  /** Resets HMD orientation and position in VR. */
-  void OnResetVR();
 
   /** Handles moving forward/backward */
   void MoveForward(float Val);
@@ -112,7 +113,7 @@ public:
 
 public:
   /** Returns Mesh1P subobject **/
-  FORCEINLINE class USkeletalMeshComponent* GetMesh1P() const { return Mesh1P; }
+  FORCEINLINE class USkeletalMeshComponent* GetMesh1P() const { return PlayerArms; }
   /** Returns FirstPersonCameraComponent subobject **/
   FORCEINLINE class UCameraComponent* GetFirstPersonCameraComponent() const { return FirstPersonCameraComponent; }
 

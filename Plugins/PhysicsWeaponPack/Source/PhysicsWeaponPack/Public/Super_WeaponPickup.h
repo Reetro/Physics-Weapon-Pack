@@ -30,6 +30,9 @@ public:
   UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Rotation Setting")
   FRotator RoatationRate;
 
+  UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Rotation Setting")
+  TSubclassOf<class ASuper_Gun> GunToGive;
+ 
   virtual void Tick(float DeltaTime) override;
 
 protected:
