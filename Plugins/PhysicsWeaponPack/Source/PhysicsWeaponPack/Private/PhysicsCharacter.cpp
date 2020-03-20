@@ -38,10 +38,6 @@ APhysicsCharacter::APhysicsCharacter()
   PlayerArms->CastShadow = false;
   PlayerArms->SetRelativeRotation(FRotator(1.9f, -19.19f, 5.2f));
   PlayerArms->SetRelativeLocation(FVector(-0.5f, -4.4f, -155.7f));
-
-
-  // Default offset from the character location for projectiles to spawn
-  GunOffset = FVector(100.0f, 0.0f, 10.0f);
 }
 
 // Called when the game starts or when spawned

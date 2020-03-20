@@ -54,10 +54,6 @@ public:
   UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera)
   float BaseLookUpRate;
 
-  /** Gun muzzle's offset from the characters location */
-  UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Gameplay)
-  FVector GunOffset;
-  
   /* Gun player will start with */
   UPROPERTY(EditDefaultsOnly, Category = "Projectile")
   TSubclassOf<ASuper_Gun> StartingGun;
@@ -107,7 +103,7 @@ public:
 
 public:
   /** Returns Mesh1P subobject **/
-  FORCEINLINE class USkeletalMeshComponent* GetMesh1P() const { return PlayerArms; }
+  FORCEINLINE class USkeletalMeshComponent* GetPlayerArms() const { return PlayerArms; }
   /** Returns FirstPersonCameraComponent subobject **/
   FORCEINLINE class UCameraComponent* GetFirstPersonCameraComponent() const { return FirstPersonCameraComponent; }
 
