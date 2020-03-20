@@ -21,19 +21,22 @@ class PHYSICSWEAPONPACK_API APhysicsCharacter : public ACharacter
   UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"))
   class UCameraComponent* FirstPersonCameraComponent;
 
-  /* Returns the current gun the player has equipped */
-  UFUNCTION(BlueprintPure, Category = "Weapon Vars")
-  ASuper_Gun* GetCurrentGun();
-
-  UFUNCTION(BlueprintCallable, Category = "Weapon Functions")
-  void EquipGun(ASuper_Gun* GunToEquip);
-
-  UFUNCTION(BlueprintCallable, Category = "Weapon Functions")
-  void UnEquipGun();
-
 public:
 	// Sets default values for this character's properties
 	APhysicsCharacter();
+
+  /* Returns the current gun the player has equipped */
+  UFUNCTION(BlueprintPure, Category = "Gun Vars")
+   ASuper_Gun* GetCurrentGun();
+
+  UFUNCTION(BlueprintCallable, Category = "Gun Functions")
+   void EquipGun(ASuper_Gun* GunToEquip);
+
+  UFUNCTION(BlueprintCallable, Category = "Gun Functions")
+  void UnEquipGun();
+
+  UFUNCTION(BlueprintCallable, Category = "Gun Functions")
+  void SpawnStartingWeapon();
 
 private:
 
@@ -51,10 +54,6 @@ public:
   /** Gun muzzle's offset from the characters location */
   UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Gameplay)
   FVector GunOffset;
-
-  /** Projectile class to spawn */
-  UPROPERTY(EditDefaultsOnly, Category = "Projectile")
-  TSubclassOf<class ASuper_Projectile> ProjectileClass;
   
   /* Gun player will start with */
   UPROPERTY(EditDefaultsOnly, Category = "Projectile")

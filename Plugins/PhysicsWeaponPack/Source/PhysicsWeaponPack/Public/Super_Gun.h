@@ -15,14 +15,6 @@ public:
 	// Sets default values for this actor's properties
 	ASuper_Gun();
 
-  /** Location on VR gun mesh where projectiles should spawn. */
-  UPROPERTY(VisibleDefaultsOnly, Category = Mesh)
-  class USceneComponent* VR_MuzzleLocation;
-
-  /** Gun mesh: VR view (attached to the VR controller directly, no arm, just the actual gun) */
-  UPROPERTY(VisibleDefaultsOnly, Category = Mesh)
-  class USkeletalMeshComponent* VR_Gun;
-
   /** Location on gun mesh where projectiles should spawn. */
   UPROPERTY(VisibleDefaultsOnly, Category = Mesh)
   class USceneComponent* Gun_MuzzleLocation;
@@ -31,12 +23,27 @@ public:
   UPROPERTY(VisibleDefaultsOnly, Category = Mesh)
   class USkeletalMeshComponent* GunMesh;
 
-  UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category = "Gun Fire Functions")
-  void OnGunFire();
-  void OnGunFire_Implementation();
+  /** Projectile class to spawn */
+  UPROPERTY(EditDefaultsOnly, Category = "Projectile")
+  TSubclassOf<class ASuper_Projectile> ProjectileClass;
 
-protected:
-	// Called when the game starts or when spawned
-	virtual void BeginPlay() override;
+  UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category = "Gun Fire Events")
+  void OnFireKeyPressed();
+  void OnFireKeyPressed_Implementation();
 
+  UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category = "Gun Fire Events")
+  void OnFireKeyReleased();
+  void OnFireKeyReleased_Implementation();
+
+  /* Creates a input component on the gun */
+  UFUNCTION(BlueprintCallable, Category = "Gun Functions")
+  void SetupGunInput(class APhysicsCharacter* Player);
+
+  /* Gets the player controller and enables gun input */
+  UFUNCTION(BlueprintCallable, Category = "Gun Functions")
+  void EnableGunInput();
+
+  /* Gets the player controller and disables gun input */
+  UFUNCTION(BlueprintCallable, Category = "Gun Functions")
+  void DisableGunInput();
 };

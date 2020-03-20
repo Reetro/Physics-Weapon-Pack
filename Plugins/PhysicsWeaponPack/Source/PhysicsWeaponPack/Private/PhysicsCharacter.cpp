@@ -48,15 +48,8 @@ APhysicsCharacter::APhysicsCharacter()
 void APhysicsCharacter::BeginPlay()
 {
 	Super::BeginPlay();
-  
-  if (!CurrentGun)
-  {
-    PlayerArms->SetHiddenInGame(true);
-  }
-  else
-  {
-    PlayerArms->SetHiddenInGame(false);
-  }
+
+  SpawnStartingWeapon();
 }
 
 // Called to bind functionality to input
@@ -70,9 +63,6 @@ void APhysicsCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCo
   // Bind jump events
   PlayerInputComponent->BindAction("Jump", IE_Pressed, this, &ACharacter::Jump);
   PlayerInputComponent->BindAction("Jump", IE_Released, this, &ACharacter::StopJumping);
-
-  // Bind fire event
-  PlayerInputComponent->BindAction("Fire", IE_Pressed, this, &APhysicsCharacter::OnFire);
 
   // Bind movement events
   PlayerInputComponent->BindAxis("MoveForward", this, &APhysicsCharacter::MoveForward);
@@ -121,7 +111,7 @@ void APhysicsCharacter::OnFire()
 {
   if (CurrentGun)
   {
-    CurrentGun->OnGunFire();
+    CurrentGun->OnFireKeyPressed();
   }
 }
 
@@ -138,11 +128,21 @@ void APhysicsCharacter::EquipGun(ASuper_Gun* GunToEquip)
 
     PlayerArms->SetHiddenInGame(false);
 
-    
+    CurrentGun = GunToEquip;
+    CurrentGun->SetupGunInput(this);
+    CurrentGun->EnableGunInput();
+
+    CurrentGun->AttachToComponent(PlayerArms, FAttachmentTransformRules(EAttachmentRule::SnapToTarget, true), TEXT("GripPoint"));
   }
   else
   {
+    PlayerArms->SetHiddenInGame(false);
 
+    CurrentGun = GunToEquip;
+    CurrentGun->SetupGunInput(this);
+    CurrentGun->EnableGunInput();
+
+    CurrentGun->AttachToComponent(PlayerArms, FAttachmentTransformRules(EAttachmentRule::SnapToTarget, true), TEXT("GripPoint"));
   }
 }
 
@@ -150,7 +150,18 @@ void APhysicsCharacter::UnEquipGun()
 {
   if (CurrentGun)
   {
+    CurrentGun->DetachFromActor(FDetachmentTransformRules::KeepWorldTransform);
+    CurrentGun->Destroy();
+  }
+}
 
+void APhysicsCharacter::SpawnStartingWeapon()
+{
+  if (StartingGun)
+  {
+    ASuper_Gun* LocalGun = GetWorld()->SpawnActor<ASuper_Gun>(StartingGun, FVector(0), FRotator(0));
+
+    EquipGun(LocalGun);
   }
 }
 

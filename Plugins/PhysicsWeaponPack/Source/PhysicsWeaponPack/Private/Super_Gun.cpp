@@ -2,6 +2,9 @@
 
 
 #include "Super_Gun.h"
+#include "PhysicsCharacter.h"
+#include "Components/InputComponent.h"
+#include "Engine/InputDelegateBinding.h"
 #include "Animation/AnimInstance.h"
 #include "Components/SkeletalMeshComponent.h"
 
@@ -13,25 +16,70 @@ ASuper_Gun::ASuper_Gun()
 
   // Create a gun mesh component
   GunMesh = CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("Gun Mesh"));
-  GunMesh->SetOnlyOwnerSee(true);
   GunMesh->bCastDynamicShadow = false;
   GunMesh->CastShadow = false;
-  GunMesh->SetupAttachment(RootComponent);
+  RootComponent = GunMesh;
 
   Gun_MuzzleLocation = CreateDefaultSubobject<USceneComponent>(TEXT("MuzzleLocation"));
   Gun_MuzzleLocation->SetupAttachment(GunMesh);
   Gun_MuzzleLocation->SetRelativeLocation(FVector(0.2f, 48.4f, -10.6f));
 }
 
-void ASuper_Gun::OnGunFire_Implementation()
+void ASuper_Gun::OnFireKeyPressed_Implementation()
 {
-
+  UE_LOG(LogTemp, Log, TEXT("Attack Key Pressed"))
 }
 
-// Called when the game starts or when spawned
-void ASuper_Gun::BeginPlay()
+void ASuper_Gun::OnFireKeyReleased_Implementation()
 {
-	Super::BeginPlay();
-	
-
+  UE_LOG(LogTemp, Log, TEXT("Attack Key Released"))
 }
+
+void ASuper_Gun::SetupGunInput(class APhysicsCharacter* Player)
+{
+  if (Player)
+  {
+    if (!Player->GetCurrentGun())
+    {
+      Player->EquipGun(this);
+    }
+
+    if (!InputComponent)
+    {
+      InputComponent = NewObject<UInputComponent>(this);
+      InputComponent->RegisterComponent();
+      InputComponent->bBlockInput = bBlockInput;
+      InputComponent->Priority = InputPriority;
+
+      UBlueprintGeneratedClass* BGClass = Cast<UBlueprintGeneratedClass>(GetClass());
+
+      if (BGClass != NULL)
+      {
+        UInputDelegateBinding::BindInputDelegates(BGClass, InputComponent);
+      }
+    }
+    InputComponent->BindAction("Fire", IE_Pressed, this, &ASuper_Gun::OnFireKeyPressed);
+    InputComponent->BindAction("Fire", IE_Released, this, &ASuper_Gun::OnFireKeyReleased);
+  }
+}
+
+void ASuper_Gun::EnableGunInput()
+{
+  APlayerController* PC = GetWorld()->GetFirstPlayerController();
+
+  if (PC)
+  {
+    this->EnableInput(PC);
+  }
+}
+
+void ASuper_Gun::DisableGunInput()
+{
+  APlayerController* PC = GetWorld()->GetFirstPlayerController();
+
+  if (PC)
+  {
+    this->DisableInput(PC);
+  }
+}
+
