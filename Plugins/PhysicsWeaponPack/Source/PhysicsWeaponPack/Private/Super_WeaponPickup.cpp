@@ -6,6 +6,7 @@
 #include "Components/SphereComponent.h"
 #include "PhysicsCharacter.h"
 #include "Components/SceneComponent.h"
+#include "Engine.h"
 #include "Components/SkeletalMeshComponent.h"
 
 // Sets default values
@@ -57,7 +58,10 @@ void ASuper_WeaponPickup::OnOverlapBegin(class UPrimitiveComponent* OverlappedCo
       }
       else
       {
-
+        if (GEngine)
+        {
+          GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, TEXT("GunToGive has not been set"));
+        }
       }
     }
   }
