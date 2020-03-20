@@ -28,15 +28,18 @@ public:
   /* Returns the current gun the player has equipped */
   UFUNCTION(BlueprintPure, Category = "Gun Vars")
    ASuper_Gun* GetCurrentGun();
-
+  /* Will attach and enable input on the given gun */
   UFUNCTION(BlueprintCallable, Category = "Gun Functions")
    void EquipGun(ASuper_Gun* GunToEquip);
-
+  /* Detaches and disables input on the current equipped gun */
   UFUNCTION(BlueprintCallable, Category = "Gun Functions")
   void UnEquipGun();
-
+  /* Spawns and equips a starting weapon */
   UFUNCTION(BlueprintCallable, Category = "Gun Functions")
   void SpawnStartingWeapon();
+  /* Shows/Hides the player arm mesh */
+  UFUNCTION(BlueprintCallable, Category = "Gun Functions")
+  void ShowPlayerArms(bool show);
 
 private:
 

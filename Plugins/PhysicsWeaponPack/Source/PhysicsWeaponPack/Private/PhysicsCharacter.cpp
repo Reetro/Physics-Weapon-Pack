@@ -126,17 +126,18 @@ void APhysicsCharacter::EquipGun(ASuper_Gun* GunToEquip)
   {
     UnEquipGun();
 
-    PlayerArms->SetHiddenInGame(false);
+    ShowPlayerArms(true);
 
     CurrentGun = GunToEquip;
     CurrentGun->SetupGunInput(this);
     CurrentGun->EnableGunInput();
 
     CurrentGun->AttachToComponent(PlayerArms, FAttachmentTransformRules(EAttachmentRule::SnapToTarget, true), TEXT("GripPoint"));
+    UE_LOG(LogTemp, Log, TEXT("New Gun"))
   }
   else
   {
-    PlayerArms->SetHiddenInGame(false);
+    ShowPlayerArms(true);
 
     CurrentGun = GunToEquip;
     CurrentGun->SetupGunInput(this);
@@ -151,6 +152,8 @@ void APhysicsCharacter::UnEquipGun()
   if (CurrentGun)
   {
     CurrentGun->DetachFromActor(FDetachmentTransformRules::KeepWorldTransform);
+    CurrentGun->DisableGunInput();
+    ShowPlayerArms(false);
     CurrentGun->Destroy();
   }
 }
@@ -163,5 +166,10 @@ void APhysicsCharacter::SpawnStartingWeapon()
 
     EquipGun(LocalGun);
   }
+}
+
+void APhysicsCharacter::ShowPlayerArms(bool show)
+{
+  PlayerArms->SetVisibility((show) ? true, true : false, true);
 }
 
