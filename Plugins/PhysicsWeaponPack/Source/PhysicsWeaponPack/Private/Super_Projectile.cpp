@@ -44,9 +44,13 @@ void ASuper_Projectile::OnHit(UPrimitiveComponent* HitComp, AActor* OtherActor, 
   // Only add impulse and destroy projectile if we hit a physics
   if ((OtherActor != NULL) && (OtherActor != this) && (OtherComp != NULL) && OtherComp->IsSimulatingPhysics())
   {
-    OtherComp->AddImpulseAtLocation(GetVelocity() * 100.0f, GetActorLocation());
-
-    Destroy();
+    OnActorHit(HitComp, OtherActor, OtherComp, NormalImpulse, Hit);
   }
 }
 
+void ASuper_Projectile::OnActorHit_Implementation(UPrimitiveComponent* HitComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit)
+{
+  OtherComp->AddImpulseAtLocation(GetVelocity() * 100.0f, GetActorLocation());
+
+  Destroy();
+}

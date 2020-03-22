@@ -30,6 +30,11 @@ public:
   UFUNCTION()
   void OnHit(UPrimitiveComponent* HitComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit);
 
+  /* Called when this actor hit's an object */
+  UFUNCTION(BlueprintNativeEvent, BlueprintCallable, Category = "Projectile Events")
+  void OnActorHit(UPrimitiveComponent* HitComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit);
+  virtual void OnActorHit_Implementation(UPrimitiveComponent* HitComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit);
+
   /** Returns CollisionComp subobject **/
   FORCEINLINE class USphereComponent* GetCollisionComp() const { return CollisionComp; }
   /** Returns ProjectileMovement subobject **/
