@@ -3,7 +3,9 @@
 
 #include "BlackHoleBase.h"
 #include "Components/SphereComponent.h"
-#include "Particles/ParticleSystemComponent.h"
+#include "PhysicsCharacter.h"
+#include "Components/StaticMeshComponent.h"
+#include "UObject/ConstructorHelpers.h"
 
 // Sets default values
 ABlackHoleBase::ABlackHoleBase()
@@ -11,15 +13,23 @@ ABlackHoleBase::ABlackHoleBase()
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 
+   BlackHoleMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Mesh"));
+   RootComponent = BlackHoleMesh;
+
   InnerSphereComponent = CreateDefaultSubobject<USphereComponent>(TEXT("InnerSphereComp"));
   InnerSphereComponent->SetSphereRadius(100);
-  RootComponent = InnerSphereComponent;
+  InnerSphereComponent->SetupAttachment(RootComponent);
 
   OuterSphereComponent = CreateDefaultSubobject<USphereComponent>(TEXT("OuterSphereComp"));
   OuterSphereComponent->SetSphereRadius(3000);
   OuterSphereComponent->SetupAttachment(RootComponent);
 
-  ParticleSystem = CreateDefaultSubobject<UParticleSystemComponent>(TEXT("Particle System"));
+  // Set Static Mesh
+  static ConstructorHelpers::FObjectFinder<UStaticMesh> Mesh(TEXT("/PhysicsWeaponPack/Meshes/BlackHoleMesh"));
+  check(Mesh.Succeeded());
+
+  BlackHoleMesh->SetStaticMesh(Mesh.Object);
+  BlackHoleMesh->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 
   BlackHoleStrength = -2000;
 }
@@ -57,6 +67,11 @@ void ABlackHoleBase::OnInnerSphereOverlap(UPrimitiveComponent* OverlappedCompone
 {
   if (OtherActor)
   {
-    OtherActor->Destroy();
+    APhysicsCharacter* Player = Cast<APhysicsCharacter>(OtherActor);
+
+    if (!Player)
+    {
+      OtherActor->Destroy();
+    }
   }
 }

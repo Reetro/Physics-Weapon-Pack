@@ -26,7 +26,7 @@ protected:
 protected:
 
   UPROPERTY(VisibleAnywhere, Category = "Components")
-  class UParticleSystemComponent* ParticleSystem;
+  class UStaticMeshComponent* BlackHoleMesh;
 
   UPROPERTY(VisibleAnywhere, Category = "Components")
   class USphereComponent* InnerSphereComponent;
