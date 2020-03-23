@@ -46,8 +46,6 @@ void ABlackHoleBase::Tick(float DeltaTime)
     UPrimitiveComponent* PrimComp = OverlappingComps[i];
     if (PrimComp && PrimComp->IsSimulatingPhysics())
     {
-      // the component we are looking for! It needs to be simulating in order to apply forces.
-
       const float SphereRadius = OuterSphereComponent->GetScaledSphereRadius();
  
       PrimComp->AddRadialForce(GetActorLocation(), SphereRadius, BlackHoleStrength, ERadialImpulseFalloff::RIF_Constant, true);
